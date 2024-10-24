@@ -1,23 +1,28 @@
 from rest_framework import serializers
 from escola.models import Estudante, Curso, Matricula
+from drf_spectacular.utils import extend_schema_field
 from .validators import *
 
 class EstudanteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Estudante
-        fields = ['id','nome','email','cpf','data_nascimento','celular']    
+        fields = ['id', 'nome', 'email', 'cpf', 'data_nascimento', 'celular']
     
     def validate(self, dados):
+        errors = {}
         if validate_nome(dados['nome']):
-            raise serializers.ValidationError({'nome':'O nome deve conter apenas letras!'})
+            errors['nome'] = 'O nome deve conter apenas letras!'
         if validate_email(dados['email']):
-            raise serializers.ValidationError({'email':'O email não está no formato correto!'})
+            errors['email'] = 'O email não está no formato correto!'
         if validate_cpf(dados['cpf']):
-            raise serializers.ValidationError({'cpf':'O cpf deve ter 11 digitos numéricos válidos!'})
+            errors['cpf'] = 'O cpf deve ter 11 digitos numéricos válidos!'
         if validate_data_nascimento(dados['data_nascimento']):
-            raise serializers.ValidationError({'data_nascimento':'A data de nascimento não pode ser maior que a data atual!'})
+            errors['data_nascimento'] = 'A data de nascimento não pode ser maior que a data atual!'
         if validate_celular(dados['celular']):
-            raise serializers.ValidationError({'celular':'O celular precisa ter 13 digitos!'})
+            errors['celular'] = 'O celular precisa ter 13 digitos!'
+        
+        if errors:
+            raise serializers.ValidationError(errors)
         return dados
 
 class CursoSerializer(serializers.ModelSerializer):
@@ -26,10 +31,14 @@ class CursoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, dados):
+        errors = {}
         if validate_codigo(dados['codigo']):
-            raise serializers.ValidationError({'codigo':'O código deve ter no mínimo 3 caracteres!'})
+           errors['codigo'] = 'O código deve ter no mínimo 3 caracteres!'
         if validate_descricao(dados['descricao']):
-            raise serializers.ValidationError({'descricao':'A descrição deve ter entre 10 e 100 caracteres!'})
+           errors['descricao'] = 'A descrição deve ter entre 10 e 100 caracteres!'
+        
+        if errors:
+            raise serializers.ValidationError(errors)
         return dados
 
 class MatriculaSerializer(serializers.ModelSerializer):
@@ -38,8 +47,12 @@ class MatriculaSerializer(serializers.ModelSerializer):
         exclude = []
 
     def validate(self, dados):
+        errors = {}
         if validate_periodo(dados):
-            raise serializers.ValidationError({'periodo':'Já existe uma matrícula desse estudante nesse período!'})
+            errors['periodo']='Já existe uma matrícula desse estudante nesse período!'
+        
+        if errors:
+            raise serializers.ValidationError(errors)
         return dados
 
 class ListaMatriculasEstudanteSerializer(serializers.ModelSerializer):
@@ -49,6 +62,7 @@ class ListaMatriculasEstudanteSerializer(serializers.ModelSerializer):
         model = Matricula
         fields = ['curso','periodo']
 
+    @extend_schema_field(serializers.CharField)
     def get_periodo(self,obj):
         return obj.get_periodo_display()
 

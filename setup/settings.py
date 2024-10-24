@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'escola',
     'rest_framework',
     'django_filters',
+    'drf_spectacular',
+    'drf_spectacular_sidecar', 
 ]
 
 MIDDLEWARE = [
@@ -134,13 +136,24 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
-    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
     'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '0/day',
-        'user': '15/day'
+        'user': '40/day'
     },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# SWAGGWGER SETTINGS
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Escola API',
+    'DESCRIPTION': 'Uma API para gerenciar alunos, cursos e matrículas',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,  # Alterar para True
+    'SWAGGER_UI_DIST': 'SIDECAR', 
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
 }
