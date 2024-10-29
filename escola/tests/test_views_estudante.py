@@ -7,6 +7,7 @@ from escola.models import Estudante
 # testes de views
 @pytest.mark.django_db
 def test_get_estudantes_sucess_200():
+    '''Teste para verificar se a requisição GET para a lista de estudantes retorna o status 200'''
     # Cria um usuário de teste
     user = User.objects.create_user(username='testuser', password='12345')
 
@@ -24,6 +25,7 @@ def test_get_estudantes_sucess_200():
 
 @pytest.mark.django_db
 def test_post_estudantes_sucess_201():
+    '''Teste para verificar se a requisição POST para a lista de estudantes retorna o status 201'''
     user = User.objects.create_user(username='testuser', password='12345')
 
     client = APIClient()
@@ -47,6 +49,7 @@ def test_post_estudantes_sucess_201():
 
 @pytest.mark.django_db
 def test_delete_estudantes_sucess_204():
+    '''Teste para verificar se a requisição DELETE para um estudante retorna o status 204'''
     user = User.objects.create_user(username='testuser', password='12345')
 
     client = APIClient()
@@ -63,8 +66,8 @@ def test_delete_estudantes_sucess_204():
 
     estudante = Estudante.objects.create(**data)
 
-    url = reverse('Estudantes-detail', None, None, {'pk':estudante.id})
-    # url = reverse('Estudantes-detail', args=[estudante.id])
+    # url = reverse('Estudantes-detail', None, None, {'pk':estudante.id})
+    url = reverse('Estudantes-detail', args=[estudante.id])
     response = client.delete(url)
 
     assert response.status_code == 204
