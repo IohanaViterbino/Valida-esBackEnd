@@ -37,17 +37,11 @@ from rest_framework.versioning import NamespaceVersioning
     description="Endpoint para o CRUD de estudantes. Retorna detalhes de validação e possíveis erros.",
 )
 class EstudanteViewSet(viewsets.ModelViewSet):
-    queryset = Estudante.objects.all().order_by('-id')
-    # serializer_class = EstudanteSerializer
+    queryset = Estudante.objects.all().order_by('nome')
+    serializer_class = EstudanteSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['nome']
     search_fields = ['nome', 'cpf']
-    # versioning_class = NamespaceVersioning
-
-    def get_serializer_class(self):
-        # if self.request.version == 'v2':
-        #     return EstudanteSerializerV2
-        return EstudanteSerializer
 
 @extend_schema(
     tags=["Curso"],
@@ -70,7 +64,7 @@ class EstudanteViewSet(viewsets.ModelViewSet):
     description="Endpoint para o CRUD de cursos. Retorna detalhes de validação e possíveis erros.",
 )
 class CursoViewSet(viewsets.ModelViewSet):
-    queryset = Curso.objects.all().order_by('-id')
+    queryset = Curso.objects.all().order_by('codigo')
     serializer_class = CursoSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['codigo', 'nivel']
