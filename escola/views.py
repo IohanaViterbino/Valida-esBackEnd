@@ -1,14 +1,12 @@
 from escola.models import Estudante, Curso, Matricula
 from escola.serializers import (
     EstudanteSerializer,CursoSerializer, MatriculaSerializer,
-    ListaMatriculasEstudanteSerializer,ListaMatriculasCursoSerializer, EstudanteSerializerV2
+    ListaMatriculasEstudanteSerializer, ListaMatriculasCursoSerializer, EstudanteSerializerV2
 )
 from rest_framework import viewsets, generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.throttling import UserRateThrottle
 from drf_spectacular.utils import extend_schema, OpenApiResponse
-
-from rest_framework.versioning import NamespaceVersioning
 
 @extend_schema(
     tags=["Estudante"],
